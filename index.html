@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Speech Recognition</title>
+  <style>
+	body {
+  background: #1e2440;
+  color: #f2efe2;
+  font-size: 16px;
+  font-family: 'Kaushan Script', cursive;
+  font-family: 'Shadows Into Light', cursive;
+}
+
+.container {
+  position: relative;
+  border: 1px solid #f2efe2;
+  width: 80vw;
+  max-width: 100vw;
+  height: 60vh;
+  max-height: 100vh;
+  margin: 0 auto;
+  border-radius: 0.1rem;
+  background: #f2efe2;
+  padding: 0.2rem 1rem;
+  color: #1e2440;
+  overflow: scroll;
+  margin-top: 10vh;
+}
+
+.text-box {
+  height:40vh;
+  max-height: 100vh;
+  overflow: scroll;
+}
+
+.text-box:focus {
+  outline: none;
+}
+
+.text-box p {
+  border-bottom: 1px dotted black;
+  margin: 0px !important;
+}
+
+.fa {
+  color: white;
+  background: #1e2440;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: 3rem;
+  float: right;
+  width: 2rem;
+  height: 2rem;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 85vw;
+    max-width: 85vw;
+  }
+
+  .text-box {
+    max-height: 100vh;
+  }
+
+  }
+
+
+select {
+  width: 22vw;
+  padding: 5px 35px 5px 5px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  height: 34px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-family: 'Kaushan Script', cursive;
+  font-family: 'Shadows Into Light', cursive;
+  outline: none;
+  cursor: pointer;
+  position: absolute;
+  bottom: 1vh;
+  border-radius: 1rem;
+}
+
+
+</style>
+  <link rel="manifest" href="css/manifest.json">
+  <!-- <link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
+  <script src="https://use.fontawesome.com/f061fecdbc.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="text-box" contenteditable="true"></div>
+    <i class="fa fa-microphone"></i>
+    <select id="voiceSelect"></select>
+	<!-- <audio class="sound" src="chime.mp3"></audio> -->
+  <script>
+    if ('webkitSpeechRecognition' in window){
+    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+    var finalTranscript = '';
+    var recognition = new window.SpeechRecognition();
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 10;
+    recognition.continuous = true;
+    recognition.onresult = (event) => {
+      var interimTranscript = '';
+      for (var i = event.resultIndex, len = event.results.length; i < len; i++) {
+        var transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+      document.querySelector('.text-box').innerHTML = finalTranscript + '<i style="color:#fff;">' + interimTranscript + '</>';
+    }
+    recognition.start();
+  }
+    else{
+      document.querySelector('.text-box').innerHTML = 'The browser doesnot support Google WebSpeech API' + '<i style="color:#fff;">'+'</n>';
+    /*function initPage() {
+    var me = new XMLHttpRequest();
+    alert("jjj");
+    me.onreadystatechange = (e) {
+      if (this.readyState == 4 && this.status == 200) {
+        document.querySelector(".text-box").innerHTML =
+          this.responseText;
+          alert("mmm");
+      }
+    };
+    me.open("GET", "http://127.0.0.1:5000/stt");
+    alert("lll");
+    me.send();
+    alert("kkk");
+    }*/
+    /*
+    $(document).ready(function() {
+      var xhr = new XMLHttpRequest();
+      alert("jjj");
+      const qurl= 'http://127.0.0.1:5000/stt';
+      alert("kkk");
+      $.ajax({
+            type: "GET",
+            cache: false,
+            url: qurl,
+            dataType: "json",
+            success: function(data) { 
+                console.log(data);                    
+            },
+            error: function(jqXHR) {
+                alert("error: " + jqXHR.status);
+                console.log(jqXHR);
+            }
+        })
+});*/
+      /*
+      xhr.open("GET", url);
+       alert("lll");
+      xhr.send();
+       alert("mmm");
+       xhr.onreadystatechange=(e)=>{
+        console.log(xhr);
+      var result = xhr.responseText;
+      alert(result);
+      document.querySelector('.text-box').innerHTML = 'The spoken resut is'+ '<i style="color:#fff;">' + result + '</>';
+      }*/
+      const Http = new XMLHttpRequest();
+      const url='http://127.0.0.1:5000/stt';
+      alert('kkk')
+      Http.open("GET", url);
+      Http.send();
+      alert('mmm')
+      Http.onreadystatechange=(e)=>{
+        console.log(Http.responseText)
+        alert('ttt')
+      }
+    }
+</script>
+</div>
+ 
+</body>
